@@ -1,12 +1,15 @@
 import { Navigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
+import { usePermissions } from '../../hooks/usePermission';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  requiredPermission?: string;
 }
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({ children, requiredPermission }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading } = useAuth();
+  const { checkPermission } = usePermissions();
 
   if (isLoading) {
     return (
@@ -21,6 +24,10 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/signin" replace />;
+  }
+
+  if (requiredPermission && !checkPermission(requiredPermission)) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

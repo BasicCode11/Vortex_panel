@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route} from "react-router";
+import { BrowserRouter as Router, Routes, Route } from "react-router";
 import SignIn from "./pages/AuthPages/SignIn";
 import NotFound from "./pages/OtherPage/NotFound";
 import UserProfiles from "./pages/UserProfiles";
@@ -24,12 +24,23 @@ export default function App() {
             </ProtectedRoute>
           }>
             <Route index path="/" element={<Home />} />
-            <Route path="/customers" element={<Customer />} />
-            <Route path="/agents" element={<Agent />} />
-            <Route path="/users" element={<User />} />
+            <Route path="/customers" element={
+              <ProtectedRoute requiredPermission="customer:read">
+                <Customer />
+              </ProtectedRoute>
+            } />
+            <Route path="/agents" element={
+              <ProtectedRoute requiredPermission="agents:read">
+                <Agent />
+              </ProtectedRoute>
+            } />
+            <Route path="/users" element={
+              <ProtectedRoute requiredPermission="users:read">
+                <User />
+              </ProtectedRoute>} />
             <Route path="/profile" element={<UserProfiles />} />
           </Route>
-          
+
           {/* Public Routes */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="*" element={<NotFound />} />

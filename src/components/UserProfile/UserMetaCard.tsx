@@ -10,7 +10,7 @@ export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const {user} =useAuth();
   const teamName = user?.team?.team_name;
-  const agentName = user?.agent?.agent_name;
+  const agentName = user?.agents?.agent_name;
   const displayNames = [teamName, agentName].filter(Boolean).join(' | ');
 
   const handleSave = () => {

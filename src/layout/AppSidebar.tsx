@@ -14,13 +14,15 @@ import {
   SettingsIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
+import { usePermissions } from "../hooks/usePermission";
 
 type NavItem = {
   name: string;
   translationKey: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; translationKey: string; path: string;}[];
+  requiredPermission?: string;
+  subItems?: { name: string; translationKey: string; path: string;requiredPermission?: string;}[];
 };
 
 const navItems: NavItem[] = [
@@ -35,24 +37,26 @@ const navItems: NavItem[] = [
     name: "Customers",
     translationKey: "sidebar.customers",
     path: "/customers",
+    requiredPermission : "customer:read",
   },
   {
     name: "Bonus Offer",
     translationKey: "sidebar.bonusOffer",
     icon: <DollarIcon />,
-    path: "/form-elements",
+    path: "/bonuns-offer",
+    requiredPermission : "bonusoffer:read",
   },
   {
     name: "Operational",
     translationKey: "sidebar.operational",
     icon: <SettingsIcon />,
     subItems: [
-      { name: "Teams", translationKey: "sidebar.teams", path: "/teams", },
-      { name: "Agents", translationKey: "sidebar.agents", path: "/agents", },
-      { name: "Banks", translationKey: "sidebar.banks", path: "/banks", },
-      { name: "Products", translationKey: "sidebar.products", path: "/products", },
-      { name: "Promotion", translationKey: "sidebar.promotion", path: "/promotions", },
-      { name: "Bonus", translationKey: "sidebar.bonus", path: "/bonus", },
+      { name: "Teams", translationKey: "sidebar.teams", path: "/teams",requiredPermission : "teams:read", },
+      { name: "Agents", translationKey: "sidebar.agents", path: "/agents", requiredPermission : "agents:read",},
+      { name: "Banks", translationKey: "sidebar.banks", path: "/banks",requiredPermission : "banks:read", },
+      { name: "Products", translationKey: "sidebar.products", path: "/products",requiredPermission : "products:read", },
+      { name: "Promotion", translationKey: "sidebar.promotion", path: "/promotions",requiredPermission : "products:read", },
+      { name: "Bonus", translationKey: "sidebar.bonus", path: "/bonus", requiredPermission : "bonuses:read",},
     ],
   },
 ];
@@ -63,8 +67,8 @@ const othersItems: NavItem[] = [
     name: "Administration",
     translationKey: "sidebar.administration",
     subItems: [
-      { name: "Role Permissions", translationKey: "sidebar.rolePermissions", path: "/role-permission", },
-      { name: "Users", translationKey: "sidebar.users", path: "/users", },
+      { name: "Role Permissions", translationKey: "sidebar.rolePermissions", path: "/role-permission",requiredPermission : "roles:read", },
+      { name: "Users", translationKey: "sidebar.users", path: "/users", requiredPermission : "users:read",},
     ],
   },
   {
@@ -79,6 +83,7 @@ const AppSidebar: React.FC = () => {
   const { t } = useTranslation();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
+  const {checkPermission} = usePermissions();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -144,11 +149,30 @@ const AppSidebar: React.FC = () => {
     });
   };
 
-  const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => (
-    <ul className="flex flex-col gap-4">
-      {items.map((nav, index) => (
-        <li key={nav.name}>
-          {nav.subItems ? (
+  const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => {
+    const filteredItems = items.filter((nav) => {
+      if (nav.requiredPermission) {
+        return checkPermission(nav.requiredPermission);
+      }
+      if (nav.subItems) {
+        const visibleSubItems = nav.subItems.filter((subItem) => 
+          !subItem.requiredPermission || checkPermission(subItem.requiredPermission)
+        );
+        return visibleSubItems.length > 0;
+      }
+      return true;
+    });
+
+    return (
+      <ul className="flex flex-col gap-4">
+        {filteredItems.map((nav, index) => {
+          const visibleSubItems = nav.subItems?.filter((subItem) =>
+            !subItem.requiredPermission || checkPermission(subItem.requiredPermission)
+          );
+
+          return (
+            <li key={nav.name}>
+              {nav.subItems ? (
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
               className={`menu-item group ${
@@ -207,7 +231,7 @@ const AppSidebar: React.FC = () => {
               </Link>
             )
           )}
-          {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
+          {visibleSubItems && visibleSubItems.length > 0 && (isExpanded || isHovered || isMobileOpen) && (
             <div
               ref={(el) => {
                 subMenuRefs.current[`${menuType}-${index}`] = el;
@@ -221,7 +245,7 @@ const AppSidebar: React.FC = () => {
               }}
             >
               <ul className="mt-2 space-y-1 ml-9">
-                {nav.subItems.map((subItem) => (
+                {visibleSubItems.map((subItem) => (
                   <li key={subItem.name}>
                     <Link
                       to={subItem.path}
@@ -238,10 +262,12 @@ const AppSidebar: React.FC = () => {
               </ul>
             </div>
           )}
-        </li>
-      ))}
-    </ul>
-  );
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
 
   return (
     <aside
