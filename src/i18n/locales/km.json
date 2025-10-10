@@ -4,6 +4,10 @@
     "darkMode": "ម៉ូតងងឹត",
     "lightMode": "ម៉ូតភ្លឺ"
   },
+   "common":{
+    "error":"ខុស​ឈ្មោះឬលេខសម្ងាត់",
+    "lableUserPass" : "បញ្ចូលឈ្មោះនិងលេខសំងាត់"
+  },
   "sidebar": {
     "menu": "ម៉ឺនុយ",
     "admin": "អ្នកគ្រប់គ្រង",
@@ -26,7 +30,10 @@
     "editProfile": "កែសម្រួលប្រវត្តិរូប",
     "accountSettings": "ការកំណត់គណនី",
     "support": "ជំនួយ",
-    "signOut": "ចាកចេញ"
+    "signOut": "ចាកចេញ",
+    "signIn": "ចូលប្រើប្រាស់",
+    "userName": "ឈ្មោះអ្នកប្រើប្រាស់",
+    "passWord": "លេខសម្ងាត់"
   },
   "language": {
     "english": "អង់គ្លេស",

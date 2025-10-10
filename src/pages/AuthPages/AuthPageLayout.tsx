@@ -1,6 +1,7 @@
 import React from "react";
 import GridShape from "../../components/common/GridShape";
 import ThemeTogglerTwo from "../../components/common/ThemeTogglerTwo";
+import LanguageToggler from "../../components/auth/LanguageToggler";
 
 export default function AuthLayout({
   children,
@@ -19,7 +20,7 @@ export default function AuthLayout({
                 <img
                   width={231}
                   height={48}
-                  src="/images/logo/auth-logo.svg"
+                  src="/images/video-thumb/youtube-icon-84.svg"
                   alt="Logo"
                 />
               <p className="text-center text-gray-400 dark:text-white/60">
@@ -28,7 +29,8 @@ export default function AuthLayout({
             </div>
           </div>
         </div>
-        <div className="fixed z-50 hidden bottom-6 right-6 sm:block">
+        <div className="fixed z-50 hidden gap-3 bottom-6 right-6 sm:flex">
+          <LanguageToggler />
           <ThemeTogglerTwo />
         </div>
       </div>

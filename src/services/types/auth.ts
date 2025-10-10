@@ -1,10 +1,10 @@
-export interface TokenResponse {
-  access_token: string;
-  token_type?: string; // "bearer"
-  expires_in?: number;
-}
-
-export interface Login{
+export interface LoginRequest {
   username: string;
   password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type?: string;
+  expires_in?: number;
 }

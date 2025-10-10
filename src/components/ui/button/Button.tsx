@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 interface ButtonProps {
+  type?: "submit" |"reset"|string;
   children: ReactNode; // Button text or content
   size?: "sm" | "md"; // Button size
   variant?: "primary" | "outline"; // Button variant
