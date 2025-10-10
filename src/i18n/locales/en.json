@@ -1,0 +1,36 @@
+{
+  "header": {
+    "search": "Search or type command...",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
+  },
+  "sidebar": {
+    "menu": "Menu",
+    "admin": "Admin",
+    "dashboard": "Dashboard",
+    "customers": "Customers",
+    "bonusOffer": "Bonus Offer",
+    "operational": "Operational",
+    "teams": "Teams",
+    "agents": "Agents",
+    "banks": "Banks",
+    "products": "Products",
+    "promotion": "Promotion",
+    "bonus": "Bonus",
+    "administration": "Administration",
+    "rolePermissions": "Role Permissions",
+    "users": "Users",
+    "userProfile": "User Profile"
+  },
+  "user": {
+    "editProfile": "Edit profile",
+    "accountSettings": "Account settings",
+    "support": "Support",
+    "signOut": "Sign out"
+  },
+  "language": {
+    "english": "English",
+    "khmer": "Khmer",
+    "selectLanguage": "Select Language"
+  }
+}

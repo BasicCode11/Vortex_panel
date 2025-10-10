@@ -1,0 +1,36 @@
+{
+  "header": {
+    "search": "ស្វែងរក ឬវាយពាក្យបញ្ជា...",
+    "darkMode": "ម៉ូតងងឹត",
+    "lightMode": "ម៉ូតភ្លឺ"
+  },
+  "sidebar": {
+    "menu": "ម៉ឺនុយ",
+    "admin": "អ្នកគ្រប់គ្រង",
+    "dashboard": "ផ្ទាំងគ្រប់គ្រង",
+    "customers": "អតិថិជន",
+    "bonusOffer": "ការផ្តល់ប្រាក់រង្វាន់",
+    "operational": "ប្រតិបត្តិការ",
+    "teams": "ក្រុម",
+    "agents": "ភ្នាក់ងារ",
+    "banks": "ធនាគារ",
+    "products": "ផលិតផល",
+    "promotion": "ប្រម៉ូសិន",
+    "bonus": "ប្រាក់រង្វាន់",
+    "administration": "រដ្ឋបាល",
+    "rolePermissions": "តួនាទីនិងសិទ្ធ",
+    "users": "អ្នកប្រើប្រាស់",
+    "userProfile": "ប្រវត្តិរូបអ្នកប្រើ"
+  },
+  "user": {
+    "editProfile": "កែសម្រួលប្រវត្តិរូប",
+    "accountSettings": "ការកំណត់គណនី",
+    "support": "ជំនួយ",
+    "signOut": "ចាកចេញ"
+  },
+  "language": {
+    "english": "អង់គ្លេស",
+    "khmer": "ខ្មែរ",
+    "selectLanguage": "ជ្រើសរើសភាសា"
+  }
+}

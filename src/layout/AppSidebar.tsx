@@ -1,73 +1,82 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
+import { useTranslation } from "react-i18next";
 
 // Assume these icons are imported from an icon library
 import {
-  BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
+  AdminIcon,
+  DollarIcon,
+  UserIcon,
   UserCircleIcon,
+  SettingsIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 
 type NavItem = {
   name: string;
+  translationKey: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; path: string;}[];
+  subItems?: { name: string; translationKey: string; path: string;}[];
 };
 
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
+    translationKey: "sidebar.dashboard",
     path: "/",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <UserIcon />,
     name: "Customers",
+    translationKey: "sidebar.customers",
     path: "/customers",
   },
   {
     name: "Bonus Offer",
-    icon: <ListIcon />,
+    translationKey: "sidebar.bonusOffer",
+    icon: <DollarIcon />,
     path: "/form-elements",
   },
   {
     name: "Operational",
-    icon: <PageIcon />,
+    translationKey: "sidebar.operational",
+    icon: <SettingsIcon />,
     subItems: [
-      { name: "Teams", path: "/teams", },
-      { name: "Agents", path: "/agents", },
-      { name: "Banks", path: "/banks", },
-      { name: "Products", path: "/products", },
-      { name: "Promotion", path: "/promotions", },
-      { name: "Bonus", path: "/bonus", },
+      { name: "Teams", translationKey: "sidebar.teams", path: "/teams", },
+      { name: "Agents", translationKey: "sidebar.agents", path: "/agents", },
+      { name: "Banks", translationKey: "sidebar.banks", path: "/banks", },
+      { name: "Products", translationKey: "sidebar.products", path: "/products", },
+      { name: "Promotion", translationKey: "sidebar.promotion", path: "/promotions", },
+      { name: "Bonus", translationKey: "sidebar.bonus", path: "/bonus", },
     ],
   },
 ];
 
 const othersItems: NavItem[] = [
   {
-    icon: <BoxCubeIcon />,
+    icon: <AdminIcon />,
     name: "Administration",
+    translationKey: "sidebar.administration",
     subItems: [
-      { name: "Role Permissions", path: "/role-permission", },
-      { name: "Users", path: "/users", },
+      { name: "Role Permissions", translationKey: "sidebar.rolePermissions", path: "/role-permission", },
+      { name: "Users", translationKey: "sidebar.users", path: "/users", },
     ],
   },
   {
     icon: <UserCircleIcon />,
     name: "User Profile",
+    translationKey: "sidebar.userProfile",
     path: "/profile",
   },
 ];
 
 const AppSidebar: React.FC = () => {
+  const { t } = useTranslation();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
@@ -162,7 +171,7 @@ const AppSidebar: React.FC = () => {
                 {nav.icon}
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
-                <span className="menu-item-text">{nav.name}</span>
+                <span className="menu-item-text">{t(nav.translationKey)}</span>
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDownIcon
@@ -193,7 +202,7 @@ const AppSidebar: React.FC = () => {
                   {nav.icon}
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
-                  <span className="menu-item-text">{nav.name}</span>
+                  <span className="menu-item-text">{t(nav.translationKey)}</span>
                 )}
               </Link>
             )
@@ -222,7 +231,7 @@ const AppSidebar: React.FC = () => {
                           : "menu-dropdown-item-inactive"
                       }`}
                     >
-                      {subItem.name}
+                      {t(subItem.translationKey)}
                     </Link>
                   </li>
                 ))}
@@ -294,7 +303,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
+                  t("sidebar.menu")
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}
@@ -310,7 +319,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Admin"
+                  t("sidebar.admin")
                 ) : (
                   <HorizontaLDots />
                 )}

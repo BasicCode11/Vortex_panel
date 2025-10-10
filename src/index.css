@@ -8,6 +8,8 @@ layer(base);
 @theme {
   --font-*: initial;
   --font-outfit: Outfit, sans-serif;
+  --font-poppins: Poppins, sans-serif;
+  --font-battambang: Battambang, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
@@ -775,4 +777,45 @@ span.flatpickr-weekday,
 
 .simplebar-scrollbar.simplebar-visible:before {
   @apply opacity-100;
+}
+
+/* Custom Fonts */
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Regular.woff2') format('woff2'),
+       url('/fonts/Poppins-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Battambang';
+  src: url('/fonts/Battambang-Regular.woff2') format('woff2'),
+       url('/fonts/Battambang-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Language-specific font styles */
+html[lang="en"] * {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+html[lang="km"] * {
+  font-family: 'Battambang', sans-serif !important;
+}
+
+/* Force specific language fonts regardless of current language */
+html[lang="en"] .font-khmer,
+html[lang="km"] .font-khmer,
+.font-khmer {
+  font-family: 'Battambang', sans-serif !important;
+}
+
+html[lang="en"] .font-english,
+html[lang="km"] .font-english,
+.font-english {
+  font-family: 'Poppins', sans-serif !important;
 }
