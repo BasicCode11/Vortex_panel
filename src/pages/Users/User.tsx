@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import PageMeta from "../../components/common/PageMeta";
 import Badge from "../../components/ui/badge/Badge";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { useUser } from "../../hooks/useUser";
+import { useUsersQuery } from "../../hooks/queries/useUsersQuery";
 import { useModal } from "../../hooks/useModal";
 import { UserAddIcon, PencilIcon, TrashBinIcon} from "../../icons";
 import { AddModal } from "./AddModal";
@@ -12,14 +12,14 @@ import { DeleteModal } from "./DeleteModal";
 import { UserResponse } from "../../services/types/user";
 
 export default function User() {
-  const { users, loading, error } = useUser();
+  const { data: users = [], isLoading, error } = useUsersQuery();
   const { t } = useTranslation();
   const { isOpen: isCreateOpen, openModal: openCreate, closeModal: closeCreate } = useModal();
   const { isOpen: isEditOpen, openModal: openEdit, closeModal: closeEdit } = useModal();
   const { isOpen: isDeleteOpen, openModal: openDelete, closeModal: closeDelete } = useModal();
   
   const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
-
+  console.log("User ", users)
   const handleEdit = (user: UserResponse) => {
     setSelectedUser(user);
     openEdit();
@@ -57,7 +57,7 @@ export default function User() {
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
-        {!loading && !error && (
+        {!isLoading && !error && (
           <div className="max-w-full overflow-x-auto">
             <div className="min-w-[720px]">
               <Table>
@@ -149,7 +149,7 @@ export default function User() {
         )}
 
         {/* Loading State */}
-        {loading && (
+        {isLoading && (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-dashed border-brand-500"></div>
@@ -162,7 +162,9 @@ export default function User() {
         {error && (
           <div className="px-6 py-12">
             <div className="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+              <p className="text-sm text-red-600 dark:text-red-400">
+                {error instanceof Error ? error.message : 'Failed to load users'}
+              </p>
             </div>
           </div>
         )}

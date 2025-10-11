@@ -1,6 +1,10 @@
 import { Modal } from "../../components/ui/modal";
 import { UserResponse } from "../../services/types/user";
 import { CustomSelect, SelectOption } from "../../components/form/CustomSelect";
+import { useTeamQuery } from "../../hooks/queries/useTeamQuery";
+import { useAgentQuery } from "../../hooks/queries/useAgentQuery";
+import { useRolesQuery } from "../../hooks/queries/useRolesQuery";
+import { usePermissions } from "../../hooks/usePermission";
 
 interface EditModalProps {
   isOpen: boolean;
@@ -8,26 +12,32 @@ interface EditModalProps {
   user: UserResponse | null;
 }
 
-// Mock data - Replace with actual data from API
-const roleOptions: SelectOption[] = [
-  { value: "admin", label: "Admin" },
-  { value: "team_actor", label: "Team Actor" },
-  { value: "agent", label: "Agent" },
-];
-
-const teamOptions: SelectOption[] = [
-  { value: "1", label: "Sales Team" },
-  { value: "2", label: "Support Team" },
-  { value: "3", label: "Marketing Team" },
-];
-
-const agentOptions: SelectOption[] = [
-  { value: "1", label: "Agent John" },
-  { value: "2", label: "Agent Sarah" },
-  { value: "3", label: "Agent Mike" },
-];
-
 export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
+  // Check permissions
+  const { isSuperAdmin } = usePermissions();
+  
+  // Fetch data from API
+  const { data: roles } = useRolesQuery();
+  const { data: teams } = useTeamQuery();
+  const { data: agents } = useAgentQuery();
+
+  // Convert API data to select options
+  const roleOptions: SelectOption[] = roles?.map(role => ({
+    value: role.id.toString(),
+    label: role.name,
+  })) || [];
+
+  const teamOptions: SelectOption[] = teams?.map(team => ({
+    value: team.id.toString(),
+    label: team.team_name,
+  })) || [];
+
+  const agentOptions: SelectOption[] = agents?.map(agent => ({
+    value: agent.id.toString(),
+    label: agent.agent_name,
+  })) || [];
+
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -118,7 +128,7 @@ export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
                 name="role"
                 placeholder="Select role"
                 options={roleOptions}
-                defaultValue={user.role.name}
+                defaultValue={user.role.id.toString()}
                 required
               />
 
@@ -127,16 +137,18 @@ export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
                 name="team"
                 placeholder="No team"
                 options={teamOptions}
-                defaultValue={user.team?.id.toString() || ""}
+                defaultValue={user.team?.id.toString() || "NA"}
               />
 
-              <CustomSelect
-                label="Agent"
-                name="agent"
-                placeholder="No agent"
-                options={agentOptions}
-                defaultValue={user.agents?.id.toString() || ""}
-              />
+              {!isSuperAdmin && (
+                <CustomSelect
+                  label="Agent"
+                  name="agent"
+                  placeholder="No agent"
+                  options={agentOptions}
+                  defaultValue={user.agents?.id.toString() || "NA"}
+                />
+              )}
             </div>
           </div>
 
