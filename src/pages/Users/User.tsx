@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import PageMeta from "../../components/common/PageMeta";
 import Badge from "../../components/ui/badge/Badge";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { useUser } from "../../hooks/userUser";
+import { useUser } from "../../hooks/useUser";
 import { useModal } from "../../hooks/useModal";
 import { UserAddIcon, PencilIcon, TrashBinIcon} from "../../icons";
 import { AddModal } from "./AddModal";
