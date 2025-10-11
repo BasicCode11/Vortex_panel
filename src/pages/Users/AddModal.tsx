@@ -1,31 +1,38 @@
 import { Modal } from "../../components/ui/modal";
 import { CustomSelect, SelectOption } from "../../components/form/CustomSelect";
+import { usePermissions } from "../../hooks/usePermission";
+import { useAgentQuery } from "../../hooks/queries/useAgentQuery";
+import { useTeamQuery } from "../../hooks/queries/useTeamQuery";
+import { useRolesQuery } from "../../hooks/queries/useRolesQuery";
 
 interface AddModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Mock data - Replace with actual data from API
-const roleOptions: SelectOption[] = [
-  { value: "admin", label: "Admin" },
-  { value: "team_actor", label: "Team Actor" },
-  { value: "agent", label: "Agent" },
-];
-
-const teamOptions: SelectOption[] = [
-  { value: "1", label: "Sales Team" },
-  { value: "2", label: "Support Team" },
-  { value: "3", label: "Marketing Team" },
-];
-
-const agentOptions: SelectOption[] = [
-  { value: "1", label: "Agent John" },
-  { value: "2", label: "Agent Sarah" },
-  { value: "3", label: "Agent Mike" },
-];
 
 export const AddModal = ({ isOpen, onClose }: AddModalProps) => {
+  const { isSuperAdmin } = usePermissions();
+
+  const { data: roles } = useRolesQuery();
+    const { data: teams } = useTeamQuery();
+    const { data: agents } = useAgentQuery();
+
+     const roleOptions: SelectOption[] = roles?.map(role => ({
+    value: role.id.toString(),
+    label: role.name,
+  })) || [];
+
+  const teamOptions: SelectOption[] = teams?.map(team => ({
+    value: team.id.toString(),
+    label: team.team_name,
+  })) || [];
+
+  const agentOptions: SelectOption[] = agents?.map(agent => ({
+    value: agent.id.toString(),
+    label: agent.agent_name,
+  })) || [];
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -99,13 +106,15 @@ export const AddModal = ({ isOpen, onClose }: AddModalProps) => {
                 placeholder="Select team"
                 options={teamOptions}
               />
-
-              <CustomSelect
+              {!isSuperAdmin &&(
+                <CustomSelect
                 label="Agent"
                 name="agent"
                 placeholder="Select agent"
                 options={agentOptions}
               />
+              )}
+              
             </div>
           </div>
 
