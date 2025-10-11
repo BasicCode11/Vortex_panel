@@ -1,5 +1,5 @@
 import { Modal } from "../../components/ui/modal";
-import { UserResponse } from "../../services/types/user";
+import { type UserResponse } from "../../schemas/userSchema";
 import { CustomSelect, SelectOption } from "../../components/form/CustomSelect";
 import { useTeamQuery } from "../../hooks/queries/useTeamQuery";
 import { useAgentQuery } from "../../hooks/queries/useAgentQuery";

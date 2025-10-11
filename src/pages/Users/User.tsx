@@ -9,7 +9,7 @@ import { UserAddIcon, PencilIcon, TrashBinIcon} from "../../icons";
 import { AddModal } from "./AddModal";
 import { EditModal } from "./EditModal";
 import { DeleteModal } from "./DeleteModal";
-import { UserResponse } from "../../services/types/user";
+import { type UserResponse } from "../../schemas/userSchema";
 
 export default function User() {
   const { data: users = [], isLoading, error } = useUsersQuery();

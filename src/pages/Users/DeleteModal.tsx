@@ -1,6 +1,6 @@
 import { Modal } from "../../components/ui/modal";
 import { TrashBinIcon } from "../../icons";
-import { UserResponse } from "../../services/types/user";
+import { type UserResponse } from "../../schemas/userSchema";
 
 interface DeleteModalProps {
   isOpen: boolean;

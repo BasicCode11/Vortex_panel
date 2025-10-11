@@ -1,21 +1,32 @@
 import { z } from 'zod';
 
-const roleSchema = z.object({
+export const roleSchema = z.object({
   id: z.number(),
   name: z.string(),
 });
 
-// Team schema
+// Team schema (nullable when embedded on User)
 const teamSchema = z.object({
   id: z.number(),
   team_name: z.string(),
 }).nullable();
 
-// Agent schema
+// Agent schema (nullable when embedded on User)
 const agentSchema = z.object({
   id: z.number(),
   agent_name: z.string(),
 }).nullable();
+
+// Non-null entity schemas for list endpoints
+export const teamEntitySchema = z.object({
+  id: z.number(),
+  team_name: z.string(),
+});
+
+export const agentEntitySchema = z.object({
+  id: z.number(),
+  agent_name: z.string(),
+});
 
 // User response schema
 export const userResponseSchema = z.object({
@@ -33,6 +44,11 @@ export const userResponseSchema = z.object({
 
 // Array of users response
 export const usersResponseSchema = z.array(userResponseSchema);
+
+// List endpoints
+export const rolesResponseSchema = z.array(roleSchema);
+export const teamsResponseSchema = z.array(teamEntitySchema);
+export const agentsResponseSchema = z.array(agentEntitySchema);
 
 
 export const createUserSchema = z.object({
@@ -105,3 +121,6 @@ export type UserResponse = z.infer<typeof userResponseSchema>;
 export type UsersResponse = z.infer<typeof usersResponseSchema>;
 export type CreateUserFormData = z.infer<typeof createUserSchema>;
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
+export type Role = z.infer<typeof roleSchema>;
+export type Team = z.infer<typeof teamEntitySchema>;
+export type Agent = z.infer<typeof agentEntitySchema>;
