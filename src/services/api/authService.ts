@@ -1,7 +1,6 @@
 import apiRequest from './axios';
 import { LoginRequest, LoginResponse } from '../types/auth';
-import { UserRead } from '../types/user';
-
+import { UserResponse } from '../types/user';
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
@@ -12,8 +11,9 @@ export const authService = {
   logout: () => {
     localStorage.removeItem('access_token');
   },
-  me: async(): Promise<UserRead> => {
-    const response = await apiRequest.get<UserRead>('/api/me');
+
+  me: async (): Promise<UserResponse> => {
+    const response = await apiRequest.get<UserResponse>('/api/me');
     return response.data;
   },
 
@@ -21,7 +21,6 @@ export const authService = {
     return localStorage.getItem('access_token');
   },
 
-  
   setToken: (token: string): void => {
     localStorage.setItem('access_token', token);
   },

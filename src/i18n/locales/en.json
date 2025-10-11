@@ -2,11 +2,17 @@
   "header": {
     "search": "Search or type command...",
     "darkMode": "Dark Mode",
-    "lightMode": "Light Mode"
+    "lightMode": "Light Mode",
+    "name": "Name"
   },
   "common":{
     "error":"Invalid username or password",
-    "lableUserPass" : "Enter your username and password to sign in!"
+    "lableUserPass" : "Enter your username and password to sign in!",
+    "nO" : "N.O",
+    "status" : "Status",
+    "role" : "Role",
+    "home" : "Home",
+    "actions" : "Actions"
   },
   "sidebar": {
     "menu": "Menu",

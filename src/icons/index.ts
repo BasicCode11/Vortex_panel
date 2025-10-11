@@ -54,10 +54,11 @@ import { ReactComponent as ChatIcon } from "./chat.svg?react";
 import { ReactComponent as MoreDotIcon } from "./moredot.svg?react";
 import { ReactComponent as AlertHexaIcon } from "./alert-hexa.svg?react";
 import { ReactComponent as ErrorHexaIcon } from "./info-hexa.svg?react";
-import { IoSettingsOutline as SettingsIcon
- } from "react-icons/io5";
+import { IoSettingsOutline as SettingsIcon} from "react-icons/io5";
 import { BiDollar as DollarIcon} from "react-icons/bi";
 import { MdOutlineAdminPanelSettings as AdminIcon } from "react-icons/md";
+import { BsPersonPlus as UserAddIcon } from "react-icons/bs";
+
 
 
 export {
@@ -120,4 +121,5 @@ export {
   SettingsIcon,
   DollarIcon,
   AdminIcon,
+  UserAddIcon,
 };
