@@ -10,8 +10,10 @@ export const queryClient = new QueryClient({
       gcTime: 10 * 60 * 1000,
       // Retry failed requests 1 time
       retry: 1,
-      // Refetch when window regains focus
-      refetchOnWindowFocus: true,
+      // Don't refetch when window regains focus
+      refetchOnWindowFocus: false,
+      // Don't refetch on mount if data is fresh
+      refetchOnMount: false,
     },
   },
 });

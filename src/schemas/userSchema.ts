@@ -55,72 +55,88 @@ export const createUserSchema = z.object({
   username: z
     .string()
     .min(3, 'Username must be at least 3 characters')
-    .max(50, 'Username must not exceed 50 characters')
+    .max(15, 'Username must not exceed 15 characters')
     .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
-  
+
   password: z
     .string()
     .min(6, 'Password must be at least 6 characters')
-    .max(100, 'Password must not exceed 100 characters')
-    .regex(/^(?=.*[A-Za-z])(?=.*\d)/, 'Password must contain at least one letter and one number'),
-  
-  role: z
-    .string()
+    .max(20, 'Password must not exceed 20 characters'),
+
+
+  role_id: z
+    .number({ message: 'Role is required' })
+    .int('Role is required')
     .min(1, 'Role is required'),
-  
-  team: z
-    .string()
+
+  team_id: z
+    .union([
+      z.number({ message: 'Team is invalid' }).int('Team is invalid').min(1, 'Team is invalid'),
+      z.null(),
+    ])
     .optional(),
-  
-  agent: z
-    .string()
+
+  agent_id: z
+    .union([
+      z.number().int().min(1, 'Agent is invalid'),
+      z.null(),
+    ])
     .optional(),
-  
-  status: z
-    .enum(['active', 'inactive'], {
-      message: 'Status must be either active or inactive', 
-    })
-    .default('active'),
+
+  status: z.union([z.boolean(), z.null()]).optional(),
 });
 
-// User update schema (password is optional)
+// User update schema (password handled via separate endpoint)
 export const updateUserSchema = z.object({
   username: z
     .string()
     .min(3, 'Username must be at least 3 characters')
-    .max(50, 'Username must not exceed 50 characters')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
-  
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(100, 'Password must not exceed 100 characters')
-    .regex(/^(?=.*[A-Za-z])(?=.*\d)/, 'Password must contain at least one letter and one number')
-    .optional()
-    .or(z.literal('')), // Allow empty string (means don't change password)
-  
-  role: z
-    .string()
-    .min(1, 'Role is required'),
-  
-  team: z
-    .string()
+    .max(15, 'Username must not exceed 15 characters')
+    .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores')
+    .nullable()
     .optional(),
-  
-  agent: z
-    .string()
+
+  role_id: z
+    .number({ message: 'Role is required' })
+    .int('Role must be a valid number')
+    .min(1, 'Role is required')
+    .nullable()
     .optional(),
-  
+
+  team_id: z
+    .union([
+      z.number().int().min(1, 'Team is invalid'),
+      z.null(),
+    ])
+    .optional(),
+
+  agent_id: z
+    .union([
+      z.number().int().min(1, 'Agent is invalid'),
+      z.null(),
+    ])
+    .optional(),
+
   status: z
-    .enum(['active', 'inactive'], {
-       message: 'Status must be either active or inactive', 
-    }),
+    .boolean()
+    .nullable()
+    .optional(),
+});
+
+// Password update schema (separate endpoint for super admin)
+export const updatePasswordSchema = z.object({
+  new_password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters')
+    .max(20, 'Password must not exceed 20 characters'),
 });
 
 export type UserResponse = z.infer<typeof userResponseSchema>;
 export type UsersResponse = z.infer<typeof usersResponseSchema>;
 export type CreateUserFormData = z.infer<typeof createUserSchema>;
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
+export type UpdatePasswordFormData = z.infer<typeof updatePasswordSchema>;
 export type Role = z.infer<typeof roleSchema>;
 export type Team = z.infer<typeof teamEntitySchema>;
 export type Agent = z.infer<typeof agentEntitySchema>;
+

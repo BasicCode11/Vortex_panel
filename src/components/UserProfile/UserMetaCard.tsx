@@ -14,8 +14,6 @@ export default function UserMetaCard() {
   const displayNames = [teamName, agentName].filter(Boolean).join(' | ');
 
   const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving changes...");
     closeModal();
   };
   return (

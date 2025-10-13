@@ -34,8 +34,6 @@ export default function LanguageSwitcher() {
     i18n.changeLanguage(languageCode);
     localStorage.setItem("language", languageCode);
     document.documentElement.setAttribute('lang', languageCode);
-    console.log('Language changed to:', languageCode);
-    console.log('HTML lang attribute:', document.documentElement.getAttribute('lang'));
     closeDropdown();
   }
 

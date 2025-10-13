@@ -4,15 +4,15 @@ import {
   usersResponseSchema,
   UserResponse,
   CreateUserFormData,
-  UpdateUserFormData 
+  UpdateUserFormData,
+  UpdatePasswordFormData
 } from "../../schemas/userSchema";
+import { fetchList } from "./fetchList";
 
 export const userService = {
   // Get all users
   getUser: async (): Promise<UserResponse[]> => {
-    const response = await apiRequest.get('/api/users');
-    // Validate response with Zod schema
-    return usersResponseSchema.parse(response.data);
+    return fetchList<UserResponse[]>('/api/users', usersResponseSchema);
   },
 
   // Get single user by ID
@@ -31,6 +31,11 @@ export const userService = {
   updateUser: async (id: number, data: UpdateUserFormData): Promise<UserResponse> => {
     const response = await apiRequest.put(`/api/users/${id}`, data);
     return userResponseSchema.parse(response.data);
+  },
+
+  // Update user password (super admin only)
+  updateUserPassword: async (id: number, data: UpdatePasswordFormData): Promise<void> => {
+    await apiRequest.put(`/api/users/${id}/password`, data);
   },
 
   // Delete user

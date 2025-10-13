@@ -18,27 +18,40 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           {/* Protected Dashboard Routes */}
-          <Route element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }>
-            <Route index path="/" element={<Home />} />
-            <Route path="/customers" element={
-              <ProtectedRoute requiredPermission="customer:read">
-                <Customer />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <AppLayout />
               </ProtectedRoute>
-            } />
-            <Route path="/agents" element={
-              <ProtectedRoute requiredPermission="agents:read">
-                <Agent />
-              </ProtectedRoute>
-            } />
-            <Route path="/users" element={
-              <ProtectedRoute requiredPermission="users:read">
-                <User />
-              </ProtectedRoute>} />
-            <Route path="/profile" element={<UserProfiles />} />
+            }
+          >
+            <Route index element={<Home />} />
+            <Route
+              path="customers"
+              element={
+                <ProtectedRoute requiredPermission="customer:read">
+                  <Customer />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agents"
+              element={
+                <ProtectedRoute requiredPermission="agents:read">
+                  <Agent />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <ProtectedRoute requiredPermission="users:read">
+                  <User />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="profile" element={<UserProfiles />} />
           </Route>
 
           {/* Public Routes */}

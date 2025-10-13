@@ -4,25 +4,43 @@ import PageMeta from "../../components/common/PageMeta";
 import Badge from "../../components/ui/badge/Badge";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import { useUsersQuery } from "../../hooks/queries/useUsersQuery";
+import { useRolesQuery } from "../../hooks/queries/useRolesQuery";
+import { useTeamQuery } from "../../hooks/queries/useTeamQuery";
+import { useAgentQuery } from "../../hooks/queries/useAgentQuery";
 import { useModal } from "../../hooks/useModal";
-import { UserAddIcon, PencilIcon, TrashBinIcon} from "../../icons";
+import { usePermissions } from "../../hooks/usePermission";
+import { UserAddIcon, TrashBinIcon, LockIcon } from "../../icons";
+import { FaRegEdit } from "react-icons/fa";
 import { AddModal } from "./AddModal";
 import { EditModal } from "./EditModal";
 import { DeleteModal } from "./DeleteModal";
+import { PasswordModal } from "./PasswordModal";
 import { type UserResponse } from "../../schemas/userSchema";
+import { LoadingSpinner } from "../../components/common/LoadingSpinner";
 
 export default function User() {
   const { data: users = [], isLoading, error } = useUsersQuery();
   const { t } = useTranslation();
+  const { isSuperAdmin } = usePermissions();
+  
+  // Prefetch roles, teams, and agents for modals
+  useRolesQuery();
+  useTeamQuery();
+  useAgentQuery();
   const { isOpen: isCreateOpen, openModal: openCreate, closeModal: closeCreate } = useModal();
   const { isOpen: isEditOpen, openModal: openEdit, closeModal: closeEdit } = useModal();
   const { isOpen: isDeleteOpen, openModal: openDelete, closeModal: closeDelete } = useModal();
+  const { isOpen: isPasswordOpen, openModal: openPassword, closeModal: closePassword } = useModal();
   
   const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
-  console.log("User ", users)
   const handleEdit = (user: UserResponse) => {
     setSelectedUser(user);
     openEdit();
+  };
+
+  const handlePassword = (user: UserResponse) => {
+    setSelectedUser(user);
+    openPassword();
   };
 
   const handleDelete = (user: UserResponse) => {
@@ -122,8 +140,17 @@ export default function User() {
                             className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-400"
                             title="Edit"
                           >
-                            <PencilIcon className="h-4 w-4" />
+                            <FaRegEdit className="h-4 w-4" />
                           </button>
+                          {isSuperAdmin && (
+                            <button
+                              onClick={() => handlePassword(u)}
+                              className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-orange-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-orange-400"
+                              title="Change Password"
+                            >
+                              <LockIcon className="h-4 w-4" />
+                            </button>
+                          )}
                           <button
                             onClick={() => handleDelete(u)}
                             className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-red-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-red-400"
@@ -149,14 +176,7 @@ export default function User() {
         )}
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-dashed border-brand-500"></div>
-              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Loading users...</p>
-            </div>
-          </div>
-        )}
+        {isLoading && <LoadingSpinner label="Loading users..." />}
 
         {/* Error State */}
         {error && (
@@ -173,6 +193,7 @@ export default function User() {
       {/* Modals */}
       <AddModal isOpen={isCreateOpen} onClose={closeCreate} />
       <EditModal isOpen={isEditOpen} onClose={closeEdit} user={selectedUser} />
+      <PasswordModal isOpen={isPasswordOpen} onClose={closePassword} user={selectedUser} />
       <DeleteModal isOpen={isDeleteOpen} onClose={closeDelete} user={selectedUser} />
     </div>
   );

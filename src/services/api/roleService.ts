@@ -1,9 +1,8 @@
-import apiRequest from "./axios";
 import { rolesResponseSchema, type Role } from "../../schemas/userSchema";
+import { fetchList } from "./fetchList";
 
 export const roleService = {
   getRole: async (): Promise<Role[]> => {
-    const response = await apiRequest.get('/api/roles');
-    return rolesResponseSchema.parse(response.data);
+    return fetchList<Role[]>('/api/roles', rolesResponseSchema);
   },
 };

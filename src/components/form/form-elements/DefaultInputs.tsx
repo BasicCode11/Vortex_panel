@@ -8,14 +8,14 @@ import DatePicker from "../date-picker.tsx";
 
 export default function DefaultInputs() {
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const options = [
     { value: "marketing", label: "Marketing" },
     { value: "template", label: "Template" },
     { value: "development", label: "Development" },
   ];
-  const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
-  };
 
   return (
     <ComponentCard title="Default Inputs">
@@ -33,9 +33,10 @@ export default function DefaultInputs() {
           <Select
             options={options}
             placeholder="Select an option"
-            onChange={handleSelectChange}
+            onChange={setSelectedValue}
             className="dark:bg-dark-900"
           />
+          <p className="sr-only">Selected option: {selectedValue}</p>
         </div>
         <div>
           <Label>Password Input</Label>
@@ -62,11 +63,11 @@ export default function DefaultInputs() {
             id="date-picker"
             label="Date Picker Input"
             placeholder="Select a date"
-            onChange={(dates, currentDateString) => {
-              // Handle your logic
-              console.log({ dates, currentDateString });
+            onChange={(_, currentDateString) => {
+              setSelectedDate(currentDateString);
             }}
           />
+          <p className="sr-only">Selected date: {selectedDate}</p>
         </div>
 
         <div>
@@ -76,12 +77,13 @@ export default function DefaultInputs() {
               type="time"
               id="tm"
               name="tm"
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setSelectedTime(e.target.value)}
             />
             <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
               <TimeIcon className="size-6" />
             </span>
           </div>
+          <p className="sr-only">Selected time: {selectedTime}</p>
         </div>
         <div>
           <Label htmlFor="tm">Input with Payment</Label>

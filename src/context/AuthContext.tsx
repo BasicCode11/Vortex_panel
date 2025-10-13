@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/api/authService';
 import type { MeResponse } from '../schemas/authSchema';
 
@@ -26,6 +27,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<MeResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -61,6 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     authService.logout();
     setUser(null);
+    queryClient.clear();
   };
 
   const value = {

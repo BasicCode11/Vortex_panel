@@ -5,7 +5,6 @@ export const useTeamQuery = () => {
   return useQuery({
     queryKey: ['teams'],
     queryFn: () => teamService.getTeam(),
-    staleTime: 5 * 60 * 1000,
   });
 };
 

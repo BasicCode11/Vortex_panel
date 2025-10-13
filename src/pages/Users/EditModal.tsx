@@ -1,10 +1,24 @@
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import { Modal } from "../../components/ui/modal";
-import { type UserResponse } from "../../schemas/userSchema";
+import { 
+  type UserResponse, 
+  updateUserSchema, 
+  type UpdateUserFormData
+} from "../../schemas/userSchema";
 import { CustomSelect, SelectOption } from "../../components/form/CustomSelect";
+import Input from "../../components/form/input/InputField";
+import Label from "../../components/form/Label";
 import { useTeamQuery } from "../../hooks/queries/useTeamQuery";
 import { useAgentQuery } from "../../hooks/queries/useAgentQuery";
 import { useRolesQuery } from "../../hooks/queries/useRolesQuery";
 import { usePermissions } from "../../hooks/usePermission";
+import { userService } from "../../services/api/userService";
+import { extractApiErrorMessage } from "../../utils/errorHandler";
 
 interface EditModalProps {
   isOpen: boolean;
@@ -13,8 +27,63 @@ interface EditModalProps {
 }
 
 export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
-  // Check permissions
+  const queryClient = useQueryClient();
+  const [error, setError] = useState("");
   const { isSuperAdmin } = usePermissions();
+
+  const {
+    control,
+    handleSubmit: handleFormSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateUserFormData>({
+    resolver: zodResolver(updateUserSchema),
+    defaultValues: {
+      username: user?.username || "",
+      role_id: user?.role.id || 0,
+      team_id: user?.team?.id || null,
+      agent_id: user?.agents?.id || null,
+      status: user?.status ?? true,
+    },
+  });
+
+  // Reset form when user changes
+  useEffect(() => {
+    if (user) {
+      reset({
+        username: user.username,
+        role_id: user.role.id,
+        team_id: user.team?.id || null,
+        agent_id: user.agents?.id || null,
+        status: user.status,
+      });
+    }
+  }, [user, reset]);
+
+
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: UpdateUserFormData }) => userService.updateUser(id, data),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("User updated successfully!");
+      setError("");
+      onClose();
+    },
+    onError: (err) => {
+      if (isAxiosError(err)) {
+        const apiMessage = extractApiErrorMessage(err.response?.data);
+        if (apiMessage) {
+          setError(apiMessage);
+          return;
+        }
+      }
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to update user");
+      }
+    },
+  });
   
   // Fetch data from API
   const { data: roles } = useRolesQuery();
@@ -38,13 +107,11 @@ export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
   })) || [];
 
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const data = Object.fromEntries(formData.entries());
-    console.log('Update user submitted:', user?.id, data);
-    onClose();
-  };
+  const onSubmit = handleFormSubmit(async (data) => {
+    if (!user) return;
+    setError("");
+    await updateUserMutation.mutateAsync({ id: user.id, data });
+  });
 
   if (!user) return null;
 
@@ -58,7 +125,13 @@ export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
           Update user information
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6">
+        <form onSubmit={onSubmit} noValidate className="mt-6">
+          {error && (
+            <div className="mb-4 px-4 py-3 text-sm text-red-700 bg-red-100 border border-red-400 rounded dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
+              {error}
+            </div>
+          )}
+
           {/* User ID Badge */}
           <div className="mb-6 flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-800/50">
             <div className="flex items-center gap-3">
@@ -85,34 +158,26 @@ export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
             <h4 className="mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
               Account Information
             </h4>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <Label>
                   Username <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
+                </Label>
+                <Controller
                   name="username"
-                  defaultValue={user.username}
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                  placeholder="Enter username"
-                  required
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      name={field.name}
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      placeholder="Enter username"
+                      disabled={isSubmitting}
+                      error={!!errors.username}
+                      hint={errors.username?.message}
+                    />
+                  )}
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                  placeholder="Leave blank to keep current"
-                />
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  Leave blank to keep current password
-                </p>
               </div>
             </div>
           </div>
@@ -123,31 +188,76 @@ export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
               Role & Assignments
             </h4>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <CustomSelect
-                label="Role"
-                name="role"
-                placeholder="Select role"
-                options={roleOptions}
-                defaultValue={user.role.id.toString()}
-                required
-              />
+              <div>
+                <Controller
+                  name="role_id"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <CustomSelect
+                        label="Role"
+                        placeholder="Select role"
+                        options={roleOptions}
+                        value={field.value?.toString()}
+                        onChange={(value) => field.onChange(Number(value))}
+                        required
+                      />
+                      {errors.role_id && (
+                        <p className="mt-1.5 text-xs text-error-500">
+                          {errors.role_id.message}
+                        </p>
+                      )}
+                    </>
+                  )}
+                />
+              </div>
 
-              <CustomSelect
-                label="Team"
-                name="team"
-                placeholder="No team"
-                options={teamOptions}
-                defaultValue={user.team?.id.toString() || "NA"}
-              />
+              <div>
+                <Controller
+                  name="team_id"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <CustomSelect
+                        label="Team"
+                        placeholder="No team"
+                        options={teamOptions}
+                        value={field.value?.toString() || ""}
+                        onChange={(value) => field.onChange(value ? Number(value) : null)}
+                      />
+                      {errors.team_id && (
+                        <p className="mt-1.5 text-xs text-error-500">
+                          {errors.team_id.message}
+                        </p>
+                      )}
+                    </>
+                  )}
+                />
+              </div>
 
               {!isSuperAdmin && (
-                <CustomSelect
-                  label="Agent"
-                  name="agent"
-                  placeholder="No agent"
-                  options={agentOptions}
-                  defaultValue={user.agents?.id.toString() || "NA"}
-                />
+                <div>
+                  <Controller
+                    name="agent_id"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <CustomSelect
+                          label="Agent"
+                          placeholder="No agent"
+                          options={agentOptions}
+                          value={field.value?.toString() || ""}
+                          onChange={(value) => field.onChange(value ? Number(value) : null)}
+                        />
+                        {errors.agent_id && (
+                          <p className="mt-1.5 text-xs text-error-500">
+                            {errors.agent_id.message}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  />
+                </div>
               )}
             </div>
           </div>
@@ -157,28 +267,32 @@ export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
             <h4 className="mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
               Account Status
             </h4>
-            <div className="flex items-center gap-6">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="status"
-                  value="active"
-                  defaultChecked={user.status}
-                  className="h-4 w-4 border-gray-300 text-brand-500 focus:ring-brand-500"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Active</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="status"
-                  value="inactive"
-                  defaultChecked={!user.status}
-                  className="h-4 w-4 border-gray-300 text-brand-500 focus:ring-brand-500"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Inactive</span>
-              </label>
-            </div>
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <div className="flex items-center gap-6">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      checked={field.value === true}
+                      onChange={() => field.onChange(true)}
+                      className="h-4 w-4 border-gray-300 text-brand-500 focus:ring-brand-500"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Active</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      checked={field.value === false}
+                      onChange={() => field.onChange(false)}
+                      className="h-4 w-4 border-gray-300 text-brand-500 focus:ring-brand-500"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Inactive</span>
+                  </label>
+                </div>
+              )}
+            />
           </div>
 
           {/* Action Buttons */}
@@ -192,9 +306,10 @@ export const EditModal = ({ isOpen, onClose, user }: EditModalProps) => {
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600"
+              disabled={isSubmitting}
+              className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Update User
+              {isSubmitting ? "Updating..." : "Update User"}
             </button>
           </div>
         </form>
