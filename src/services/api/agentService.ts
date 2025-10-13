@@ -1,10 +1,8 @@
-
-import { Agent } from "../types/user";
-import apiRequest from "./axios";
+import { agentsResponseSchema, type Agent } from "../../schemas/userSchema";
+import { fetchList } from "./fetchList";
 
 export const agentService = {
-    getAgent : async() : Promise<Agent[]> => {
-        const response = await apiRequest.get<Agent[]>('/api/agents');
-        return response.data;
-    }
-}
+  getAgent: async (): Promise<Agent[]> => {
+    return fetchList<Agent[]>('/api/agents', agentsResponseSchema);
+  },
+};

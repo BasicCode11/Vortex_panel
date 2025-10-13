@@ -1,6 +1,11 @@
+import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { Modal } from "../../components/ui/modal";
 import { TrashBinIcon } from "../../icons";
-import { UserResponse } from "../../services/types/user";
+import { type UserResponse } from "../../schemas/userSchema";
+import { userService } from "../../services/api/userService";
+import { extractApiErrorMessage } from "../../utils/errorHandler";
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -9,9 +14,34 @@ interface DeleteModalProps {
 }
 
 export const DeleteModal = ({ isOpen, onClose, user }: DeleteModalProps) => {
-  const handleDelete = () => {
-    // Handle delete logic
-    console.log('Delete user:', user?.id);
+  const queryClient = useQueryClient();
+
+
+  const deleteUserMutation = useMutation({
+    mutationFn: (id: number) => userService.deleteUser(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("User deleted successfully!");
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        const apiMessage = extractApiErrorMessage(error.response?.data);
+        if (typeof apiMessage === "string") {
+          toast.error(apiMessage);
+          return;
+        }
+      }
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to delete user");
+      }
+    },
+  });
+
+  const handleDelete = async () => {
+    if (!user) return;
+    await deleteUserMutation.mutateAsync(user.id);
     onClose();
   };
 
@@ -57,9 +87,10 @@ export const DeleteModal = ({ isOpen, onClose, user }: DeleteModalProps) => {
           </button>
           <button
             onClick={handleDelete}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700"
+            disabled={deleteUserMutation.isPending}
+            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Delete User
+            {deleteUserMutation.isPending ? "Deleting..." : "Delete User"}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
 import { usePermissions } from '../../hooks/usePermission';
+import { LoadingSpinner } from '../common/LoadingSpinner';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,14 +13,7 @@ export const ProtectedRoute = ({ children, requiredPermission }: ProtectedRouteP
   const { checkPermission } = usePermissions();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-brand-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner wrapperClassName="min-h-screen" sizeClass="h-16 w-16" />;
   }
 
   if (!isAuthenticated) {
