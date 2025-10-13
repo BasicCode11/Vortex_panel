@@ -17,6 +17,8 @@ import { RouternonePage, Data } from "./context/RouternonePage";
 import Product from "./pages/Products/Product";
 import Bonus from "./pages/Bonus/Bonus";
 import RolePermission from "./pages/Roles/RolePermission";
+import AddPage from "./pages/Roles/AddPage";
+import EditPage from "./pages/Roles/EditPage";
 import Promotion from "./pages/Promotions/Promotions";
 
 export default function App() {
@@ -59,6 +61,22 @@ export default function App() {
               element={
                 <ProtectedRoute requiredPermission="roles:read" requiredActor={['super-admin','team-actor']}>
                   <RolePermission />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="role-permission/new"
+              element={
+                <ProtectedRoute requiredPermission="roles:create" requiredActor={['super-admin','team-actor']}>
+                  <AddPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="role-permission/:id/edit"
+              element={
+                <ProtectedRoute requiredPermission="roles:update" requiredActor={['super-admin','team-actor']}>
+                  <EditPage />
                 </ProtectedRoute>
               }
             />

@@ -12,7 +12,8 @@
     "status" : "Status",
     "role" : "Role",
     "home" : "Home",
-    "actions" : "Actions"
+    "actions" : "Actions",
+    "description" : "Description"
   },
   "sidebar": {
     "menu": "Menu",
