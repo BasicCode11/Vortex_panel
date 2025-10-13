@@ -45,5 +45,9 @@
     "english": "អង់គ្លេស",
     "khmer": "ខ្មែរ",
     "selectLanguage": "ជ្រើសរើសភាសា"
+  },
+  "balance": {
+    "credit_en": "ឥណទាន​ដុលា",
+    "credit_kh": "ឥណទាន​ខ្មែរ"
   }
 }

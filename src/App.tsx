@@ -8,9 +8,10 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import Agent from "./pages/Agents/Agent";
 import Customer from "./pages/Customers/Customer";
+import Bonusoffer from "./pages/Bonusoffer";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-
+import { RouternonePage , Data } from "./context/RouternonePage";
 export default function App() {
   return (
     <AuthProvider>
@@ -39,6 +40,14 @@ export default function App() {
                 <User />
               </ProtectedRoute>} />
             <Route path="/profile" element={<UserProfiles />} />
+            <Route path="/bonuns-offer" element={
+              <ProtectedRoute requiredPermission="bonusoffer:read">
+                <Bonusoffer />
+              </ProtectedRoute>
+              } />
+            {RouternonePage.map((route: Data) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
           </Route>
 
           {/* Public Routes */}

@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
-import { AgentData, AgentResponse } from "../services/types/agent";
+import { Agent , AgentApiResponse} from "../services/types/agent";
 import { agentService } from "../services/api/agentService";
 
-export function useAgent(): AgentData {
-    const [agents, setAgents] = useState<AgentResponse[]>([]);
+export function useAgent(): AgentApiResponse {
+    const [agents, setAgents] = useState<Agent[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
-    
+
     useEffect(() => {
-        async function fetchAgent() {
-            try {
+        async function fetchAgents() {
+            try{
                 setLoading(true);
-                setError(''); 
-                const response = await agentService.getAgent();
+                setError('');
+                const response = await agentService.getAgents();
                 setAgents(response);
-            } catch (e) {
-                setError("Failed to load agent data.");
+            } catch {
+                setError("Failed to load agents data.");
             } finally {
                 setLoading(false);
             }
         }
-        fetchAgent();
-    }, []); 
+        fetchAgents();
+    } , [])
     return { agents, loading, error };
 }

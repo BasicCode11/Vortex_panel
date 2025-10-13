@@ -45,5 +45,9 @@
     "english": "English",
     "khmer": "Khmer",
     "selectLanguage": "Select Language"
+  },
+  "balance": {
+    "credit_en": "Credit English",
+    "credit_kh": "Credit Khmer"
   }
 }

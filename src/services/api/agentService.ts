@@ -1,10 +1,15 @@
+import { Agent } from "../types/agent";
 
-import { Agent } from "../types/user";
 import apiRequest from "./axios";
 
 export const agentService = {
-    getAgent : async() : Promise<Agent[]> => {
-        const response = await apiRequest.get<Agent[]>('/api/agents');
-        return response.data;
+  getAgents: async (): Promise<Agent[]> => {
+    try {
+      const response = await apiRequest.get<Agent[]>("/api/agents");
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch agents:", error);
+      throw error; // rethrow so calling code can handle it
     }
-}
+  },
+};
