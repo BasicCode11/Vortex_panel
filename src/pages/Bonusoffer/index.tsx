@@ -1,6 +1,8 @@
 
 import { useTranslation } from "react-i18next"
 import PageMeta from "../../components/common/PageMeta"
+import { useNavigate } from "react-router"
+
 import {
   Table,
   TableBody,
@@ -14,7 +16,10 @@ import {  AngleRightIcon } from "../../icons"
 export default function Bonusoffer() {
     const { t } = useTranslation()
     const {agents , loading , error} = useAgent();
-   
+    const navigate = useNavigate();
+    const handleViewBonusOffer = (agentid: number) => {
+        navigate(`/bonus-offer/${agentid}`)
+    }
     return (
         <div >
             <PageMeta 
@@ -82,6 +87,7 @@ export default function Bonusoffer() {
                                                     <button
                                                         className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-400"
                                                         title="Work Bonus offer" 
+                                                        onClick={() => handleViewBonusOffer(a.id)}
                                                     >
                                                         
                                                             <AngleRightIcon className="h-4 w-4" />

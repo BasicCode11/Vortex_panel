@@ -9,6 +9,8 @@ import Home from "./pages/Dashboard/Home";
 import Agent from "./pages/Agents/Agent";
 import Customer from "./pages/Customers/Customer";
 import Bonusoffer from "./pages/Bonusoffer";
+import Teams from "./pages/Teams";
+import Banks from "./pages/Banks"
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { RouternonePage, Data } from "./context/RouternonePage";
@@ -67,11 +69,25 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
-
+            <Route
+              path="banks"
+              element={
+                <ProtectedRoute requiredPermission="banks:read">
+                  <Banks />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="teams" element={
+              <ProtectedRoute requiredPermission="teams:read">
+                 <Teams/>
+              </ProtectedRoute>
+              } 
+            />
             {/* Dynamically injected routes */}
             {RouternonePage.map((route: Data) => (
               <Route key={route.path} path={route.path} element={route.element} />
             ))}
+
           </Route>
 
           {/* Public routes */}
