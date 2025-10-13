@@ -14,6 +14,10 @@ import Banks from "./pages/Banks"
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { RouternonePage, Data } from "./context/RouternonePage";
+import Product from "./pages/Products/Product";
+import Bonus from "./pages/Bonus/Bonus";
+import RolePermission from "./pages/Roles/RolePermission";
+import Promotion from "./pages/Promotions/Promotions";
 
 export default function App() {
   return (
@@ -51,6 +55,14 @@ export default function App() {
             />
 
             <Route
+              path="role-permission"
+              element={
+                <ProtectedRoute requiredPermission="roles:read">
+                  <RolePermission />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="users"
               element={
                 <ProtectedRoute requiredPermission="users:read">
@@ -80,6 +92,27 @@ export default function App() {
             <Route path="teams" element={
               <ProtectedRoute requiredPermission="teams:read">
                  <Teams/>
+              </ProtectedRoute>
+              } 
+            />
+
+            <Route path="products" element={
+              <ProtectedRoute requiredPermission="products:read">
+                 <Product/>
+              </ProtectedRoute>
+              } 
+            />
+
+            <Route path="bonus" element={
+              <ProtectedRoute requiredPermission="bonuses:read">
+                 <Bonus/>
+              </ProtectedRoute>
+              } 
+            />
+
+            <Route path="promotions" element={
+              <ProtectedRoute requiredPermission="promotions:read">
+                 <Promotion/>
               </ProtectedRoute>
               } 
             />
