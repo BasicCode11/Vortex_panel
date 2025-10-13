@@ -11,44 +11,25 @@ import Customer from "./pages/Customers/Customer";
 import Bonusoffer from "./pages/Bonusoffer";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import { RouternonePage , Data } from "./context/RouternonePage";
+import { RouternonePage, Data } from "./context/RouternonePage";
+
 export default function App() {
   return (
     <AuthProvider>
       <Router>
         <ScrollToTop />
         <Routes>
-          {/* Protected Dashboard Routes */}
+          {/* Protected routes under AppLayout */}
           <Route
             path="/"
             element={
               <ProtectedRoute>
                 <AppLayout />
               </ProtectedRoute>
-<<<<<<< HEAD
-            } />
-            <Route path="/agents" element={
-              <ProtectedRoute requiredPermission="agents:read">
-                <Agent />
-              </ProtectedRoute>
-            } />
-            <Route path="/users" element={
-              <ProtectedRoute requiredPermission="users:read">
-                <User />
-              </ProtectedRoute>} />
-            <Route path="/profile" element={<UserProfiles />} />
-            <Route path="/bonuns-offer" element={
-              <ProtectedRoute requiredPermission="bonusoffer:read">
-                <Bonusoffer />
-              </ProtectedRoute>
-              } />
-            {RouternonePage.map((route: Data) => (
-              <Route key={route.path} path={route.path} element={route.element} />
-            ))}
-=======
             }
           >
             <Route index element={<Home />} />
+
             <Route
               path="customers"
               element={
@@ -57,6 +38,7 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="agents"
               element={
@@ -65,6 +47,7 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="users"
               element={
@@ -73,11 +56,25 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route path="profile" element={<UserProfiles />} />
->>>>>>> d34712e7f48cf6193139df99a1b03ec3528da5a0
+
+            <Route
+              path="bonuns-offer/*"
+              element={
+                <ProtectedRoute requiredPermission="bonusoffer:read">
+                  <Bonusoffer />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Dynamically injected routes */}
+            {RouternonePage.map((route: Data) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
           </Route>
 
-          {/* Public Routes */}
+          {/* Public routes */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
