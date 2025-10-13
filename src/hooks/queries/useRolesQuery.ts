@@ -8,4 +8,12 @@ export const useRolesQuery = () => {
   });
 };
 
+export const useRolesPermissionQuery = () => {
+  return useQuery({
+    queryKey: ['roles'],
+    queryFn: () => roleService.getRolePermission(),
+  });
+};
+
 export type UseRolesQueryResult = ReturnType<typeof useRolesQuery>;
+export type UseRolesPermissionQueryResult = ReturnType<typeof useRolesPermissionQuery>;

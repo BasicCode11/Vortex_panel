@@ -1,9 +1,6 @@
 import { z } from 'zod';
+import { roleSchema } from './roleSchema';
 
-export const roleSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-});
 
 // Team schema (nullable when embedded on User)
 const teamSchema = z.object({

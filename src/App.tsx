@@ -39,7 +39,7 @@ export default function App() {
             <Route
               path="customers"
               element={
-                <ProtectedRoute requiredPermission="customer:read">
+                <ProtectedRoute requiredPermission="customer:read" requiredActor={['super-admin','team-actor','agent-actor']}>
                   <Customer />
                 </ProtectedRoute>
               }
@@ -48,7 +48,7 @@ export default function App() {
             <Route
               path="agents"
               element={
-                <ProtectedRoute requiredPermission="agents:read">
+                <ProtectedRoute requiredPermission="agents:read" requiredActor={['super-admin','team-actor']}>
                   <Agent />
                 </ProtectedRoute>
               }
@@ -57,7 +57,7 @@ export default function App() {
             <Route
               path="role-permission"
               element={
-                <ProtectedRoute requiredPermission="roles:read">
+                <ProtectedRoute requiredPermission="roles:read" requiredActor={['super-admin','team-actor']}>
                   <RolePermission />
                 </ProtectedRoute>
               }
@@ -65,7 +65,7 @@ export default function App() {
             <Route
               path="users"
               element={
-                <ProtectedRoute requiredPermission="users:read">
+                <ProtectedRoute requiredPermission="users:read" requiredActor={['super-admin','team-actor']}>
                   <User />
                 </ProtectedRoute>
               }
@@ -76,7 +76,7 @@ export default function App() {
             <Route
               path="bonuns-offer/*"
               element={
-                <ProtectedRoute requiredPermission="bonusoffer:read">
+                <ProtectedRoute requiredPermission="bonusoffer:read" requiredActor={['super-admin','team-actor']}>
                   <Bonusoffer />
                 </ProtectedRoute>
               }
@@ -84,34 +84,34 @@ export default function App() {
             <Route
               path="banks"
               element={
-                <ProtectedRoute requiredPermission="banks:read">
+                <ProtectedRoute requiredPermission="banks:read" requiredActor={['super-admin','team-actor']}>
                   <Banks />
                 </ProtectedRoute>
               }
             />
             <Route path="teams" element={
-              <ProtectedRoute requiredPermission="teams:read">
+              <ProtectedRoute requiredPermission="teams:read" requiredActor={['super-admin','team-actor']}>
                  <Teams/>
               </ProtectedRoute>
               } 
             />
 
             <Route path="products" element={
-              <ProtectedRoute requiredPermission="products:read">
+              <ProtectedRoute requiredPermission="products:read" requiredActor={['super-admin','team-actor']}>
                  <Product/>
               </ProtectedRoute>
               } 
             />
 
             <Route path="bonus" element={
-              <ProtectedRoute requiredPermission="bonuses:read">
+              <ProtectedRoute requiredPermission="bonuses:read" requiredActor={['super-admin','team-actor']}>
                  <Bonus/>
               </ProtectedRoute>
               } 
             />
 
             <Route path="promotions" element={
-              <ProtectedRoute requiredPermission="promotions:read">
+              <ProtectedRoute requiredPermission="promotions:read" requiredActor={['super-admin','team-actor']}>
                  <Promotion/>
               </ProtectedRoute>
               } 
