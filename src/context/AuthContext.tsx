@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/api/authService';
-import { UserResponse } from '../services/types/user';
+import type { MeResponse } from '../schemas/authSchema';
 
 interface AuthContextType {
-  user: UserResponse | null;
+  user: MeResponse | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
@@ -26,7 +27,8 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<UserResponse | null>(null);
+  const queryClient = useQueryClient();
+  const [user, setUser] = useState<MeResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUser = async () => {
@@ -61,6 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     authService.logout();
     setUser(null);
+    queryClient.clear();
   };
 
   const value = {

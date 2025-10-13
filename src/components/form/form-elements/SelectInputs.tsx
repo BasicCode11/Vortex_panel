@@ -10,9 +10,7 @@ export default function SelectInputs() {
     { value: "template", label: "Template" },
     { value: "development", label: "Development" },
   ];
-  const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
-  };
+  const [selectedValue, setSelectedValue] = useState<string>("");
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   const multiOptions = [
@@ -30,9 +28,10 @@ export default function SelectInputs() {
           <Select
             options={options}
             placeholder="Select Option"
-            onChange={handleSelectChange}
+            onChange={setSelectedValue}
             className="dark:bg-dark-900"
           />
+          <p className="sr-only">Selected Value: {selectedValue}</p>
         </div>
         <div>
           <MultiSelect

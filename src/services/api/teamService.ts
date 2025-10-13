@@ -1,9 +1,8 @@
-import { Team } from "../types/user";
-import apiRequest from "./axios";
+import { teamsResponseSchema, type Team } from "../../schemas/userSchema";
+import { fetchList } from "./fetchList";
 
 export const teamService = {
-    getAgent : async() : Promise<Team[]> => {
-        const response = await apiRequest.get<Team[]>('/api/agents');
-        return response.data;
-    }
-}
+  getTeam: async (): Promise<Team[]> => {
+    return fetchList<Team[]>('/api/teams', teamsResponseSchema);
+  },
+};

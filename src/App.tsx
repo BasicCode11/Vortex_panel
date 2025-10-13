@@ -19,16 +19,13 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           {/* Protected Dashboard Routes */}
-          <Route element={
-            <ProtectedRoute>
-              <AppLayout />
-            </ProtectedRoute>
-          }>
-            <Route index path="/" element={<Home />} />
-            <Route path="/customers" element={
-              <ProtectedRoute requiredPermission="customer:read">
-                <Customer />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <AppLayout />
               </ProtectedRoute>
+<<<<<<< HEAD
             } />
             <Route path="/agents" element={
               <ProtectedRoute requiredPermission="agents:read">
@@ -48,6 +45,36 @@ export default function App() {
             {RouternonePage.map((route: Data) => (
               <Route key={route.path} path={route.path} element={route.element} />
             ))}
+=======
+            }
+          >
+            <Route index element={<Home />} />
+            <Route
+              path="customers"
+              element={
+                <ProtectedRoute requiredPermission="customer:read">
+                  <Customer />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agents"
+              element={
+                <ProtectedRoute requiredPermission="agents:read">
+                  <Agent />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <ProtectedRoute requiredPermission="users:read">
+                  <User />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="profile" element={<UserProfiles />} />
+>>>>>>> d34712e7f48cf6193139df99a1b03ec3528da5a0
           </Route>
 
           {/* Public Routes */}
