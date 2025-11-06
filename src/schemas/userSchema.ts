@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { email, z } from 'zod';
 import { roleSchema } from './roleSchema';
 
 
@@ -25,18 +25,19 @@ export const agentEntitySchema = z.object({
   agent_name: z.string(),
 });
 
+const roleSchema = z.object({
+  id: z.number(),
+  name: z.string()
+})
 // User response schema
 export const userResponseSchema = z.object({
   id: z.number(),
-  username: z.string(),
+  uuid: z.string(),
+  email: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
   role: roleSchema,
-  team: teamSchema,
-  agents: agentSchema,
-  last_active: z.string(),
-  created_at: z.string(),
-  updated_at: z.string(),
-  status: z.boolean(),
-  permissions: z.array(z.string()).optional(),
+  
 });
 
 // Array of users response
