@@ -16,7 +16,7 @@ export const roleService = {
     return fetchList<Permission[]>('/api/permissions',permissionRespon);
   },
 
-  getRoleById : async(id:number) : Promise<RoleWithPermissions> => {
+  getRoleById : async(id:number | undefined) : Promise<RoleWithPermissions> => {
     const response = await apiRequest.get(`/api/roles/${id}`);
     return roleWithPermissionsSchema.parse(response.data);
   },

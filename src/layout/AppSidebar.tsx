@@ -16,15 +16,14 @@ import {
 import { useSidebar } from "../context/SidebarContext";
 import { usePermissions } from "../hooks/usePermission";
 
-type Actor = 'super-admin' | 'team-actor' | 'agent-actor';
+
 type NavItem = {
   name: string;
   translationKey: string;
   icon: React.ReactNode;
   path?: string;
   requiredPermission?: string;
-  requiredActor?: Actor | Actor[];
-  subItems?: { name: string; translationKey: string; path: string; requiredPermission?: string; requiredActor?: Actor | Actor[]; }[];
+  subItems?: { name: string; translationKey: string; path: string; requiredPermission?: string; }[];
 };
 
 const navItems: NavItem[] = [
@@ -32,6 +31,7 @@ const navItems: NavItem[] = [
     icon: <GridIcon />,
     name: "Dashboard",
     translationKey: "sidebar.dashboard",
+    // requiredPermission:"users:read",
     path: "/",
   },
   {
@@ -47,19 +47,18 @@ const navItems: NavItem[] = [
     icon: <DollarIcon />,
     path: "/bonuns-offer",
     requiredPermission: "bonusoffer:read",
-    requiredActor: ["super-admin","team-actor"]
   },
   {
     name: "Operational",
     translationKey: "sidebar.operational",
     icon: <SettingsIcon />,
     subItems: [
-      { name: "Teams", translationKey: "sidebar.teams", path: "/teams", requiredPermission: "teams:read",requiredActor: ["super-admin","team-actor"], },
-      { name: "Agents", translationKey: "sidebar.agents", path: "/agents", requiredPermission: "agents:read", requiredActor: ["super-admin","team-actor"],},
-      { name: "Banks", translationKey: "sidebar.banks", path: "/banks", requiredPermission: "banks:read", requiredActor: ["super-admin","team-actor"],},
-      { name: "Products", translationKey: "sidebar.products", path: "/products", requiredPermission: "products:read",requiredActor: ["super-admin","team-actor"], },
-      { name: "Promotion", translationKey: "sidebar.promotion", path: "/promotions", requiredPermission: "products:read", requiredActor: ["super-admin","team-actor"],},
-      { name: "Bonus", translationKey: "sidebar.bonus", path: "/bonus", requiredPermission: "bonuses:read", requiredActor: ["super-admin","team-actor"],},
+      { name: "Teams", translationKey: "sidebar.teams", path: "/teams", requiredPermission: "teams:read" },
+      { name: "Agents", translationKey: "sidebar.agents", path: "/agents", requiredPermission: "agents:read" },
+      { name: "Banks", translationKey: "sidebar.banks", path: "/banks", requiredPermission: "banks:read" },
+      { name: "Products", translationKey: "sidebar.products", path: "/products", requiredPermission: "products:read" },
+      { name: "Promotion", translationKey: "sidebar.promotion", path: "/promotions", requiredPermission: "products:read" },
+      { name: "Bonus", translationKey: "sidebar.bonus", path: "/bonus", requiredPermission: "bonuses:read" },
     ],
   },
 ];
@@ -70,8 +69,8 @@ const othersItems: NavItem[] = [
     name: "Administration",
     translationKey: "sidebar.administration",
     subItems: [
-      { name: "Role Permissions", translationKey: "sidebar.rolePermissions", path: "/role-permission", requiredPermission: "roles:read", requiredActor: ["super-admin","team-actor"],},
-      { name: "Users", translationKey: "sidebar.users", path: "/users", requiredPermission: "users:read",requiredActor: ["super-admin","team-actor"], },
+      { name: "Role Permissions", translationKey: "sidebar.rolePermissions", path: "/role-permission", requiredPermission: "roles:read", },
+      { name: "Users", translationKey: "sidebar.users", path: "/users", requiredPermission: "users:read", },
     ],
   },
   {
@@ -86,18 +85,7 @@ const AppSidebar: React.FC = () => {
   const { t } = useTranslation();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
-  const { checkPermission, isSuperAdmin, isTeamActor, isAgentActor } = usePermissions();
-
-  const hasActor = (required?: Actor | Actor[]) => {
-    if (!required) return true;
-    const req = Array.isArray(required) ? required : [required];
-    const current: Actor[] = [
-      isSuperAdmin && 'super-admin',
-      isTeamActor && 'team-actor',
-      isAgentActor && 'agent-actor',
-    ].filter(Boolean) as Actor[];
-    return req.some(r => current.includes(r));
-  };
+  const { checkPermission} = usePermissions();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -169,13 +157,11 @@ const AppSidebar: React.FC = () => {
     const filteredItems = items.filter((nav) => {
       if (nav.subItems) {
         const visibleSubItems = nav.subItems.filter(
-          (s) => (!s.requiredPermission || checkPermission(s.requiredPermission)) &&
-            hasActor(s.requiredActor)
+          (s) => (!s.requiredPermission || checkPermission(s.requiredPermission))
         );
-        return visibleSubItems.length > 0 && hasActor(nav.requiredActor);
+        return visibleSubItems.length > 0 ;
       }
-      return (!nav.requiredPermission || checkPermission(nav.requiredPermission)) &&
-        hasActor(nav.requiredActor);
+      return (!nav.requiredPermission || checkPermission(nav.requiredPermission)) 
     });
 
 
@@ -184,8 +170,7 @@ const AppSidebar: React.FC = () => {
         {filteredItems.map((nav, index) => {
           const visibleSubItems = nav.subItems?.filter(
                (s) =>
-                 (!s.requiredPermission || checkPermission(s.requiredPermission)) &&
-                 hasActor(s.requiredActor)
+                 (!s.requiredPermission || checkPermission(s.requiredPermission)) 
              );
 
           return (

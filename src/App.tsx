@@ -6,20 +6,15 @@ import User from "./pages/Users/User";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
-import Agent from "./pages/Agents/Agent";
-import Customer from "./pages/Customers/Customer";
-import Bonusoffer from "./pages/Bonusoffer";
-import Teams from "./pages/Teams";
-import Banks from "./pages/Banks"
+
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import { RouternonePage, Data } from "./context/RouternonePage";
-import Product from "./pages/Products/Product";
-import Bonus from "./pages/Bonus/Bonus";
+// import { RouternonePage, Data } from "./context/RouternonePage";
+
 import RolePermission from "./pages/Roles/RolePermission";
 import AddPage from "./pages/Roles/AddPage";
 import EditPage from "./pages/Roles/EditPage";
-import Promotion from "./pages/Promotions/Promotions";
+
 
 export default function App() {
   return (
@@ -38,23 +33,7 @@ export default function App() {
           >
             <Route index element={<Home />} />
 
-            <Route
-              path="customers"
-              element={
-                <ProtectedRoute requiredPermission="customer:read" requiredActor={['super-admin','team-actor','agent-actor']}>
-                  <Customer />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="agents"
-              element={
-                <ProtectedRoute requiredPermission="agents:read" requiredActor={['super-admin','team-actor']}>
-                  <Agent />
-                </ProtectedRoute>
-              }
-            />
+           
 
             <Route
               path="role-permission"
@@ -91,53 +70,11 @@ export default function App() {
 
             <Route path="profile" element={<UserProfiles />} />
 
-            <Route
-              path="bonuns-offer/*"
-              element={
-                <ProtectedRoute requiredPermission="bonusoffer:read" requiredActor={['super-admin','team-actor']}>
-                  <Bonusoffer />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="banks"
-              element={
-                <ProtectedRoute requiredPermission="banks:read" requiredActor={['super-admin','team-actor']}>
-                  <Banks />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="teams" element={
-              <ProtectedRoute requiredPermission="teams:read" requiredActor={['super-admin','team-actor']}>
-                 <Teams/>
-              </ProtectedRoute>
-              } 
-            />
-
-            <Route path="products" element={
-              <ProtectedRoute requiredPermission="products:read" requiredActor={['super-admin','team-actor']}>
-                 <Product/>
-              </ProtectedRoute>
-              } 
-            />
-
-            <Route path="bonus" element={
-              <ProtectedRoute requiredPermission="bonuses:read" requiredActor={['super-admin','team-actor']}>
-                 <Bonus/>
-              </ProtectedRoute>
-              } 
-            />
-
-            <Route path="promotions" element={
-              <ProtectedRoute requiredPermission="promotions:read" requiredActor={['super-admin','team-actor']}>
-                 <Promotion/>
-              </ProtectedRoute>
-              } 
-            />
+        
             {/* Dynamically injected routes */}
-            {RouternonePage.map((route: Data) => (
+            {/* {RouternonePage.map((route: Data) => (
               <Route key={route.path} path={route.path} element={route.element} />
-            ))}
+            ))} */}
 
           </Route>
 

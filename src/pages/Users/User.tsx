@@ -1,20 +1,16 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PageMeta from "../../components/common/PageMeta";
-import Badge from "../../components/ui/badge/Badge";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import { useUsersQuery } from "../../hooks/queries/useUsersQuery";
 import { useRolesQuery } from "../../hooks/queries/useRolesQuery";
-import { useTeamQuery } from "../../hooks/queries/useTeamQuery";
-import { useAgentQuery } from "../../hooks/queries/useAgentQuery";
 import { useModal } from "../../hooks/useModal";
 import { usePermissions } from "../../hooks/usePermission";
 import { UserAddIcon, TrashBinIcon, LockIcon } from "../../icons";
 import { FaRegEdit } from "react-icons/fa";
-import { AddModal } from "./AddModal";
-import { EditModal } from "./EditModal";
-import { DeleteModal } from "./DeleteModal";
-import { PasswordModal } from "./PasswordModal";
+// import { AddModal } from "./AddModal";
+// import { EditModal } from "./EditModal";
+// import { DeleteModal } from "./DeleteModal";
+// import { PasswordModal } from "./PasswordModal";
 import { type UserResponse } from "../../schemas/userSchema";
 import { LoadingSpinner } from "../../components/common/LoadingSpinner";
 
@@ -25,26 +21,31 @@ export default function User() {
   
   // Prefetch roles, teams, and agents for modals
   useRolesQuery();
-  useTeamQuery();
-  useAgentQuery();
-  const { isOpen: isCreateOpen, openModal: openCreate, closeModal: closeCreate } = useModal();
-  const { isOpen: isEditOpen, openModal: openEdit, closeModal: closeEdit } = useModal();
-  const { isOpen: isDeleteOpen, openModal: openDelete, closeModal: closeDelete } = useModal();
-  const { isOpen: isPasswordOpen, openModal: openPassword, closeModal: closePassword } = useModal();
+  // const { isOpen: isCreateOpen, openModal: openCreate, closeModal: closeCreate } = useModal();
+  // const { isOpen: isEditOpen, openModal: openEdit, closeModal: closeEdit } = useModal();
+  // const { isOpen: isDeleteOpen, openModal: openDelete, closeModal: closeDelete } = useModal();
+  // const { isOpen: isPasswordOpen, openModal: openPassword, closeModal: closePassword } = useModal();
   
-  const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
+  // const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
+  const { openModal: openEdit } = useModal();
+  const { openModal: openPassword } = useModal();
+  const { openModal: openDelete } = useModal();
+  
   const handleEdit = (user: UserResponse) => {
-    setSelectedUser(user);
+    // setSelectedUser(user);
+    console.log('Edit user:', user);
     openEdit();
   };
 
   const handlePassword = (user: UserResponse) => {
-    setSelectedUser(user);
+    // setSelectedUser(user);
+    console.log('Change password for user:', user);
     openPassword();
   };
 
   const handleDelete = (user: UserResponse) => {
-    setSelectedUser(user);
+    // setSelectedUser(user);
+    console.log('Delete user:', user);
     openDelete();
   };
 
@@ -113,26 +114,12 @@ export default function User() {
                       <TableCell className="px-5 py-4 sm:px-6 text-start">
                         <span className="font-medium text-gray-800 text-theme-sm dark:text-white/90">{index + 1}</span>
                       </TableCell>                      
-                      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        {u.username}
-                      </TableCell>
+                     
                       <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                         {u.role.name}
                       </TableCell>
-                      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        {u.team?.team_name}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        {u.agents?.agent_name}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        <Badge color={u.status ? "success" : "warning"} variant="solid" size="sm">
-                            {u.status ? "Active": "Inactive"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                        {new Date(u.last_active).toLocaleDateString()}
-                      </TableCell>
+                    
+                     
                       <TableCell className="px-4 py-3">
                         <div className="flex items-center justify-center gap-2">
                           <button
@@ -191,10 +178,10 @@ export default function User() {
       </div>
 
       {/* Modals */}
-      <AddModal isOpen={isCreateOpen} onClose={closeCreate} />
+      {/* <AddModal isOpen={isCreateOpen} onClose={closeCreate} />
       <EditModal isOpen={isEditOpen} onClose={closeEdit} user={selectedUser} />
       <PasswordModal isOpen={isPasswordOpen} onClose={closePassword} user={selectedUser} />
-      <DeleteModal isOpen={isDeleteOpen} onClose={closeDelete} user={selectedUser} />
+      <DeleteModal isOpen={isDeleteOpen} onClose={closeDelete} user={selectedUser} /> */}
     </div>
   );
 }

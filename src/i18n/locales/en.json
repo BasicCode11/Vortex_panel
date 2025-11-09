@@ -5,15 +5,15 @@
     "lightMode": "Light Mode",
     "name": "Name"
   },
-  "common":{
-    "error":"Invalid username or password",
-    "lableUserPass" : "Enter your username and password to sign in!",
-    "nO" : "N.O",
-    "status" : "Status",
-    "role" : "Role",
-    "home" : "Home",
-    "actions" : "Actions",
-    "description" : "Description"
+  "common": {
+    "error": "Invalid username or password",
+    "lableUserPass": "Enter your username and password to sign in!",
+    "nO": "N.O",
+    "status": "Status",
+    "role": "Role",
+    "home": "Home",
+    "actions": "Actions",
+    "description": "Description"
   },
   "sidebar": {
     "menu": "Menu",
@@ -39,7 +39,7 @@
     "support": "Support",
     "signOut": "Sign out",
     "signIn": "Sign In",
-    "userName": "Username",
+    "email": "Email",
     "passWord": "Password"
   },
   "language": {
@@ -50,5 +50,25 @@
   "balance": {
     "credit_en": "Credit English",
     "credit_kh": "Credit Khmer"
-  }
+  },
+  "common.lableUserPass": "Enter your Email Adress and password to sign in!",
+  "forgot.success": "Verification code sent to your email!",
+  "forgot.faild": "Failed to send verification code",
+  "code.success": "Code verified successfully!",
+  "forgot.title": "Forgot Password",
+  "validate.email": "Enter your email",
+  "validate.send": "We'll send a verification code to your email",
+  "common.cancel": "Cancel",
+  "code.sendcode": "Send Code",
+  "code.sending": "Send Coding....",
+  "verify.code": "Verification Code",
+  "validate.code": "Enter verification code",
+  "validate.codewell": "Check your email for the verification code",
+  "verify.verifycode": "Verify Code",
+  "verify.verifycoding": "Verifying......",
+  "user.newpassword": "New Password",
+  "validate.newpassword": "Enter new password",
+  "validate.newpass": "Password must be 6-20 characters",
+  "rest.resspassword": "Reset Password",
+  "rest.resspasswording": "Resetting ..."
 }

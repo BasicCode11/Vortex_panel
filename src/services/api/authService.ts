@@ -1,6 +1,22 @@
 import apiRequest from './axios';
-import { LoginResponseSchema, meResponseSchema } from '../../schemas/authSchema';
-import type { LoginRequest, LoginResponse, MeResponse } from '../../schemas/authSchema';
+import {
+  LoginResponseSchema,
+  loginUserSchema,
+  forgotPasswordResponseSchema,
+  verifyResetCodeResponseSchema,
+  resetPasswordResponseSchema,
+} from '../../schemas/authSchema';
+import type {
+  LoginRequest,
+  LoginResponse,
+  LoginUser,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  VerifyResetCodeRequest,
+  VerifyResetCodeResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
+} from '../../schemas/authSchema';
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
@@ -12,9 +28,9 @@ export const authService = {
     localStorage.removeItem('access_token');
   },
 
-  me: async (): Promise<MeResponse> => {
+  me: async (): Promise<LoginUser> => {
     const response = await apiRequest.get('/api/me');
-    return meResponseSchema.parse(response.data);
+    return loginUserSchema.parse(response.data);
   },
 
   getToken: (): string | null => {
@@ -27,5 +43,20 @@ export const authService = {
 
   isAuthenticated: (): boolean => {
     return !!localStorage.getItem('access_token');
+  },
+
+  forgotPassword: async (data: ForgotPasswordRequest): Promise<ForgotPasswordResponse> => {
+    const response = await apiRequest.post('/api/forgot-password', data);
+    return forgotPasswordResponseSchema.parse(response.data);
+  },
+
+  verifyResetCode: async (data: VerifyResetCodeRequest): Promise<VerifyResetCodeResponse> => {
+    const response = await apiRequest.post('/api/verify-reset-code', data);
+    return verifyResetCodeResponseSchema.parse(response.data);
+  },
+
+  resetPassword: async (data: ResetPasswordRequest): Promise<ResetPasswordResponse> => {
+    const response = await apiRequest.post('/api/reset-password', data);
+    return resetPasswordResponseSchema.parse(response.data);
   },
 };

@@ -6,5 +6,15 @@ export const useUsersQuery = () => {
     queryKey: ['users'],
     queryFn: () => userService.getUser(),
   });
+
 };
+
+export const useUserProfileQuery = () => {
+  return useQuery({
+    queryKey: ['users'],
+    queryFn: () => userService.getprofile()
+  })
+}
+
+export type useUserProfileQueryResult = ReturnType<typeof useUserProfileQuery>;
 export type UseUsersQueryResult = ReturnType<typeof useUsersQuery>;

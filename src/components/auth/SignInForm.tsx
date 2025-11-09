@@ -10,6 +10,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { loginSchema } from "../../schemas/authSchema";
 import type { LoginRequest } from "../../schemas/authSchema";
+import { ForgotPasswordModal } from "./ForgotPasswordModal";
 
 export default function SignInForm() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function SignInForm() {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   const {
     control,
@@ -24,13 +26,13 @@ export default function SignInForm() {
     formState: { errors, isSubmitting },
   } = useForm<LoginRequest>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { username: "", password: "" },
+    defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = handleSubmit(async ({ username, password }) => {
+  const onSubmit = handleSubmit(async ({ email, password }) => {
     setError("");
     try {
-      await login(username, password);
+      await login(email, password);
       navigate("/");
     } catch (err: unknown) {
       const axiosError = err as { response?: { status?: number; data?: { detail?: string } } };
@@ -44,8 +46,8 @@ export default function SignInForm() {
 
   return (
     <div className="flex flex-col flex-1">
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
-        <div>
+      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto ">
+        <div className="">
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
               {t("user.signIn")}
@@ -65,20 +67,20 @@ export default function SignInForm() {
 
                 <div>
                   <Label>
-                    {t("user.userName")} <span className="text-error-500">*</span>
+                    {t("user.email")} <span className="text-error-500">*</span>
                   </Label>
                   <Controller
-                    name="username"
+                    name="email"
                     control={control}
                     render={({ field }) => (
                       <Input
                         name={field.name}
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder={t("user.userName")}
+                        placeholder={t("user.email")}
                         disabled={isSubmitting}
-                        error={!!errors.username}
-                        hint={errors.username?.message}
+                        error={!!errors.email}
+                        hint={errors.email?.message}
                       />
                     )}
                   />
@@ -128,11 +130,26 @@ export default function SignInForm() {
                     {isSubmitting ? "Signing in..." : t("user.signIn")}
                   </Button>
                 </div>
+
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsForgotPasswordOpen(true)}
+                    className="text-sm text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-primary-300 transition-colors"
+                  >
+                    {t("forgot.title")}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
         </div>
       </div>
+
+      <ForgotPasswordModal
+        isOpen={isForgotPasswordOpen}
+        onClose={() => setIsForgotPasswordOpen(false)}
+      />
     </div>
   );
 }
